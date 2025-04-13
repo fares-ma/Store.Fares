@@ -35,7 +35,7 @@ namespace Persistence.Repositories
             //return await _context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
-        public async Task<TEntity> GetAsync(TKey id)
+        public async Task<TEntity?> GetAsync(TKey id)
         {
             if (typeof(TEntity) == typeof(Product))
             {
@@ -49,12 +49,12 @@ namespace Persistence.Repositories
            await _context.AddAsync(entity);
         }
 
-        public  void UpdateAsync(TEntity entity)
+        public  void Update(TEntity entity)
         {
              _context.Update(entity);
         }
 
-        public void DeleteAsync(TEntity entity)
+        public void Delete(TEntity entity)
         {
             _context.Remove(entity);
         }

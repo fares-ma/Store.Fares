@@ -30,7 +30,7 @@ namespace Persistence
                     await _context.Database.MigrateAsync();
                 }
 
-                if (_context.productTypes.Any())
+                if (!_context.productTypes.Any())
                 {
                     var typesDate = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Seeding\types.json");
 
@@ -45,7 +45,7 @@ namespace Persistence
 
                 }
 
-                if (_context.productBrands.Any())
+                if (!_context.productBrands.Any())
                 {
                     var brandsDate = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Seeding\brands.json");
                     var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsDate);
@@ -58,7 +58,7 @@ namespace Persistence
 
                 }
 
-                if (_context.Products.Any())
+                if (!_context.Products.Any())
                 {
                     var productsDate = await File.ReadAllTextAsync(@"..\Infrastructure\Persistence\Data\Seeding\products.json");
                     var products = JsonSerializer.Deserialize<List<Product>>(productsDate);
