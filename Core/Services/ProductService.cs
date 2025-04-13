@@ -23,7 +23,7 @@ namespace Services
          
         public async Task<ProductResultDto?> GetProductByIdAsync(int id)
         {
-            var product = await unitOfWork.GetRepository<Product, int>().GetByIdAsync(id);
+            var product = await unitOfWork.GetRepository<Product, int>().GetAsync(id);
             if (product is null)return null;
             var result = mapper.Map<ProductResultDto>(product);
             return result;

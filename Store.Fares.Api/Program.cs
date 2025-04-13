@@ -3,6 +3,10 @@ using Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Data;
+using Services;
+using Services.Abstractions;
+
+using AssemblyMapping = Services.AssemblyReference;
 
 namespace Store.Fares.Api
 {
@@ -24,6 +28,9 @@ namespace Store.Fares.Api
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDbInitializer, DbInitializer>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork> ();
+            builder.Services.AddAutoMapper(typeof(AssemblyMapping).Assembly);
+            builder.Services.AddScoped<IServiceManager, ServiceManager> ();
 
 
             var app = builder.Build();

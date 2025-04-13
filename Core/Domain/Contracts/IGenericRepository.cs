@@ -11,7 +11,7 @@ namespace Domain.Contracts
     {
 
         Task<IEnumerable<TEntity>> GetAllAsync(bool trackChanges = false);
-        Task<TEntity> GetByIdAsync(TKey id);
+        Task<TEntity> GetAsync(TKey id);
         Task AddAsync(TEntity entity);
         void UpdateAsync(TEntity entity);
         void DeleteAsync(TEntity entity);
