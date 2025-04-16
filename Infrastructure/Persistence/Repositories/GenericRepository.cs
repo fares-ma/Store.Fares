@@ -29,7 +29,7 @@ namespace Persistence.Repositories
             }
             return trackChanges ?
                  await _context.Set<TEntity>().ToListAsync()
-                 : await _context.Set<TEntity>().AsNoTracking().ToListAsync();
+               : await _context.Set<TEntity>().AsNoTracking().ToListAsync();
 
             //if (trackChanges)return await _context.Set<TEntity>().ToListAsync();
             //return await _context.Set<TEntity>().AsNoTracking().ToListAsync();
@@ -59,6 +59,7 @@ namespace Persistence.Repositories
             _context.Remove(entity);
         }
 
-      
+
+
     }
 }
