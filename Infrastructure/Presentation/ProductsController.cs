@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using Shared;
+using Shared.ErrorsModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +22,25 @@ namespace Presentation
         // sort : pricedesc
 
         [HttpGet] // GET : /api/ products
-        public async Task<IActionResult> GetAllProducts([FromQuery] ProductSpecificationParamters specParams)
+        [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(PaginationResponse<ProductResultDto>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError,Type = typeof(ErrorDetails))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest,Type = typeof(ErrorDetails))]
+        public async Task<ActionResult<PaginationResponse<ProductResultDto>>> GetAllProducts([FromQuery] ProductSpecificationParamters specParams)
         {
             var result = await serviceManager.ProductService.GetAllProductsAsync(specParams);
-            if (result is null) return BadRequest(); // 
-
+           
             return Ok(result); // 200
         }
 
+
+
+
         [HttpGet("{id}")] // GET : /api/products/12
-        public async Task<IActionResult> GetProductById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductResultDto))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorDetails))]
+        public async Task<ActionResult<ProductResultDto>> GetProductById(int id)
         {
             var result = await serviceManager.ProductService.GetProductByIdAsync(id);
 
@@ -39,7 +50,10 @@ namespace Presentation
         }
 
         [HttpGet("brands")] // GET : /api/products/brands
-        public async Task<IActionResult> GetAllBrands()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BrandResuItDto>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
+        public async Task<ActionResult<BrandResuItDto>> GetAllBrands()
         {
             var result = await serviceManager.ProductService.GetAllBrandsAsync();
 
@@ -51,7 +65,10 @@ namespace Presentation
 
 
         [HttpGet("types")] // GET : /api/products/types
-        public async Task<IActionResult> GetAllTypes()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TypeResuItDto>))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorDetails))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorDetails))]
+        public async Task<ActionResult<TypeResuItDto>> GetAllTypes()
         {
             var result = await serviceManager.ProductService.GetAllTypesAsync();
 
