@@ -9,14 +9,22 @@ namespace Domain.Models
     public class Product : BaseEntity<int>
     {
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public string PictureUrl { get; set; }
+
         public decimal Price { get; set; }
-        public int BrandId { get; set; }// FK
-        public int TypeId { get; set; }// FK
-        public ProductBrand ProductBrand { get; set; } // Navigation property
-        public ProductType ProductType { get; set; } // Navigation property
+
+        public int BrandId { get; set; } // FK
+
+        public ProductBrand ProductBrand { get; set; } // Navigational Property
+
+
+        public int TypeId { get; set; } // Fk
+
+        public ProductType ProductType { get; set; } // Navigational Property
+
+
     }
-    
-    
 }

@@ -12,7 +12,7 @@ namespace Shared
 
         public int? TypeId { get; set; }
 
-        public string? Sort { get; set; }
+        public string? Sort {  get; set; }
 
         public string? Search { get; set; }
 
@@ -29,8 +29,11 @@ namespace Shared
 
         public int PageIndex
         {
-            get { return _pageIndex; }
+            get { return _pageIndex ; }
             set { _pageIndex = value; }
         }
+
+
+
     }
 }

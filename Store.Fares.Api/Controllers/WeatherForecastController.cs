@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Store.Fares.Api.Controllers
+namespace Store.Ali.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

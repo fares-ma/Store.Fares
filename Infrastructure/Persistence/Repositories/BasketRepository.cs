@@ -20,7 +20,7 @@ namespace Persistence.Repositories
         {
            var redisValue = await _database.StringGetAsync(id);
            if (redisValue.IsNullOrEmpty) return null;
-            var basket =  JsonSerializer.Deserialize<CustomerBasket>(redisValue);
+            var basket =  JsonSerializer.Deserialize<CustomerBasket>(redisValue.ToString());
            if(basket is  null) return null;
             
             return basket;
