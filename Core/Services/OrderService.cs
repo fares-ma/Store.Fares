@@ -34,7 +34,7 @@ namespace Services
             if (string.IsNullOrEmpty(basket.PaymentIntentId))
             {
                 // يمكنك هنا توليد قيمة جديدة أو إرجاع خطأ واضح
-                throw new BadRequestException("PaymentIntentId is required to create an order.");
+                throw new PaymentIntentMissingException();
             }
 
             var orderItems = new List<OrderItem>();

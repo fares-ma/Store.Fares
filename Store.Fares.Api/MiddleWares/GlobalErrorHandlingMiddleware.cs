@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Shared.ErrorModels;
 
-namespace Store.Ali.Api.Middlewares
+namespace Store.Fares.Api.MiddleWares
 {
     public class GlobalErrorHandlingMiddleware
     {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Persistence;
 using Shared.ErrorModels;
 using Domain.Contracts;
-using Store.Ali.Api.Middlewares;
+using Store.Fares.Api.MiddleWares;
 using Domain.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Persistence.Identity;
@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
-namespace Store.Ali.Api.Extensions
+namespace Store.Fares.Api.Extensions
 {
     public static class Extensions
     {
@@ -29,7 +29,7 @@ namespace Store.Ali.Api.Extensions
 
             services.AddIdentityServices();
 
-            services.AddApplicationServices(configuration);
+            services.AddApplicationServices();
 
 
             services.ConfigureServices();
@@ -63,6 +63,11 @@ namespace Store.Ali.Api.Extensions
         private static IServiceCollection ConfigureJwtServices(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtOptions = configuration.GetSection("jwtOptions").Get<JwtOptions>();
+
+            if (jwtOptions == null)
+            {
+                throw new InvalidOperationException("JWT Options configuration section is missing from appsettings.json");
+            }
 
             services.AddAuthentication(options =>
             {
@@ -184,8 +189,6 @@ namespace Store.Ali.Api.Extensions
 
                 var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>(); // ASK CLR Create Object From IDbInitializer
                 await dbInitializer.InitializeAsync();
-
-                await dbInitializer.InitializeIdentityAsync();
             }
             catch (Exception ex)
             {
