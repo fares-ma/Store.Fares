@@ -38,9 +38,9 @@ namespace Presentation.Attributes
             // Execute The Endpoint
         var contextResult =  await next.Invoke();
 
-            if (contextResult.Result is OkObjectResult okObject)
+                        if (contextResult.Result is OkObjectResult okObject && okObject.Value is not null)
             {
-              await  cacheService.SetCacheValueAysnc(cacheKey, okObject.Value, TimeSpan.FromSeconds(durationInSec) );
+                            await cacheService.SetCacheValueAysnc(cacheKey, okObject.Value, TimeSpan.FromSeconds(durationInSec) );
             }
         }
 

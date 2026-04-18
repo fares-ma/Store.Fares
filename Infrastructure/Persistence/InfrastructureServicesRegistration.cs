@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Persistence.Data;
 using Persistence.Identity;
@@ -18,18 +19,32 @@ namespace Persistence
 {
     public static class InfrastructureServicesRegistration
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
-
-            services.AddDbContext<StoreDbContext>(options =>
+            if (environment.IsDevelopment())
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
+                services.AddDbContext<StoreDbContext>(options =>
+                {
+                    options.UseInMemoryDatabase("StoreFaresDev");
+                });
 
-            services.AddDbContext<StoreIdentityDbContext>(options =>
+                services.AddDbContext<StoreIdentityDbContext>(options =>
+                {
+                    options.UseInMemoryDatabase("StoreFaresIdentityDev");
+                });
+            }
+            else
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
+                services.AddDbContext<StoreDbContext>(options =>
+                {
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                });
+
+                services.AddDbContext<StoreIdentityDbContext>(options =>
+                {
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                });
+            }
 
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -37,8 +52,10 @@ namespace Persistence
             services.AddScoped<ICacheRepository, CacheRepository>();
             services.AddSingleton<IConnectionMultiplexer>((ServiceProvider)=>
             {
-               
-                return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
+                var redisConnection = configuration.GetConnectionString("Redis") ?? "localhost:6379";
+                var redisOptions = ConfigurationOptions.Parse(redisConnection);
+                redisOptions.AbortOnConnectFail = false;
+                return ConnectionMultiplexer.Connect(redisOptions);
             });
 
             return services;

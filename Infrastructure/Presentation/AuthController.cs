@@ -45,6 +45,10 @@ namespace Presentation
         public async Task<IActionResult> GetCurrentUser()
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return Unauthorized();
+            }
 
             var result = await serviceManager.AuthService.GetCurrentUserAsync(email);
             return Ok(result);
@@ -54,6 +58,11 @@ namespace Presentation
         public async Task<IActionResult> GetCurrentUserAddress()
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return Unauthorized();
+            }
+
             var result = await serviceManager.AuthService.GetCurrentUserAddressAsync(email);
             return Ok(result);
         }
@@ -63,6 +72,11 @@ namespace Presentation
         public async Task<IActionResult> UpdateCurrentUserAddress(AddressDto addressDto)
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return Unauthorized();
+            }
+
             var result = await serviceManager.AuthService.UpdateCurrentUserAddressesAsync(addressDto, email);
             return Ok(result);
         }

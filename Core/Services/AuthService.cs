@@ -33,7 +33,7 @@ namespace Services
             return new UserResultDto()
             {
                 DisplayName = user.DisplayName,
-                Email = user.Email,
+                Email = user.Email ?? string.Empty,
                 Token = await GenerateJwtTokenAsync(user),
 
             };
@@ -92,7 +92,7 @@ namespace Services
             return new UserResultDto()
             {
                 DisplayName = user.DisplayName,
-                Email = user.Email,
+                Email = user.Email ?? string.Empty,
                 Token = await GenerateJwtTokenAsync(user)
             };
         }
@@ -148,8 +148,8 @@ namespace Services
 
             var authClaim = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
             };
 
            var roles = await userManager.GetRolesAsync(user);

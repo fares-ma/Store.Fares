@@ -22,7 +22,7 @@ namespace Store.Fares.Api
             // Add services to the container.
 
 
-            builder.Services.RegisterAllServices(builder.Configuration);
+            builder.Services.RegisterAllServices(builder.Configuration, builder.Environment);
 
 
             var app = builder.Build();

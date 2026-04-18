@@ -18,14 +18,14 @@ namespace Store.Fares.Api.Extensions
 {
     public static class Extensions
     {
-        public static IServiceCollection RegisterAllServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection RegisterAllServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
             services.AddBuiltInServices();
 
             services.AddSwaggerServices();
     
 
-            services.AddInfrastructureServices(configuration);
+            services.AddInfrastructureServices(configuration, environment);
 
             services.AddIdentityServices();
 
@@ -125,11 +125,11 @@ namespace Store.Fares.Api.Extensions
             {
                 config.InvalidModelStateResponseFactory = (actionContext) =>
                 {
-                    var errors = actionContext.ModelState.Where(m => m.Value.Errors.Any())
+                    var errors = actionContext.ModelState.Where(m => m.Value?.Errors.Any() == true)
                                               .Select(m => new ValidationError()
                                               {
                                                   Field = m.Key,
-                                                  Errors = m.Value.Errors.Select(errors => errors.ErrorMessage)
+                                                  Errors = m.Value!.Errors.Select(errors => errors.ErrorMessage)
                                               }
                                               );
 
@@ -158,12 +158,9 @@ namespace Store.Fares.Api.Extensions
 
 
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // Configure Swagger in all environments to make API docs accessible after deployment.
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
@@ -173,6 +170,19 @@ namespace Store.Fares.Api.Extensions
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapGet("/", () => Results.Ok(new
+            {
+                status = "ok",
+                message = "Store.Fares API is running",
+                docs = "/swagger"
+            }));
+
+            app.MapGet("/health", () => Results.Ok(new
+            {
+                status = "healthy",
+                timestamp = DateTime.UtcNow
+            }));
 
 
             app.MapControllers();

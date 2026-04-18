@@ -20,6 +20,10 @@ namespace Presentation
         public async Task<IActionResult> CreateOrder(OrderRequestDto request)
         {
           var email = User.FindFirstValue(ClaimTypes.Email);
+                    if (string.IsNullOrWhiteSpace(email))
+                    {
+                            return Unauthorized();
+                    }
 
          var result = await serviceManager.OrderService.CreateOrderAsync(request, email);
 
@@ -31,6 +35,10 @@ namespace Presentation
         public async Task<IActionResult> GetOrders()
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return Unauthorized();
+            }
 
             var result = await serviceManager.OrderService.GetOrderByUserEmailAsync(email);
 

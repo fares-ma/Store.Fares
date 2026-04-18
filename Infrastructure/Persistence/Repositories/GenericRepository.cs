@@ -23,9 +23,11 @@ namespace Persistence.Repositories
         {
            if (typeof(TEntity) == typeof(Product))
             {
-                return trackChanges ?
-                  await _context.Products.Include(P => P.ProductBrand).Include(P => P.ProductType).ToListAsync() as IEnumerable<TEntity> 
-                 : await _context.Products.Include(P => P.ProductBrand).Include(P => P.ProductType).AsNoTracking().ToListAsync() as IEnumerable<TEntity>;
+                                var products = trackChanges
+                                        ? await _context.Products.Include(P => P.ProductBrand).Include(P => P.ProductType).ToListAsync()
+                                        : await _context.Products.Include(P => P.ProductBrand).Include(P => P.ProductType).AsNoTracking().ToListAsync();
+
+                                return products.Select(p => (TEntity)(object)p).ToList();
             }
             return trackChanges ?
                  await _context.Set<TEntity>().ToListAsync()
